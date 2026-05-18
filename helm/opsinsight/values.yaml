@@ -1,0 +1,48 @@
+backend:
+  replicaCount: 2
+  image:
+    repository: opsinsight-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: 8000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    secretKey: change-me-in-production-use-a-strong-secret
+    corsOrigins: '["http://localhost:3000"]'
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: opsinsight-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: LoadBalancer
+    port: 80
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+postgresql:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "16-alpine"
+  auth:
+    database: opsinsight
+    username: opsinsight
+    password: opsinsight
+  persistence:
+    enabled: true
+    size: 5Gi
